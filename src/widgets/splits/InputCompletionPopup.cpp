@@ -141,4 +141,9 @@ void InputCompletionPopup::initLayout()
                      });
 }
 
+bool InputCompletionPopup::isEmpty() const
+{
+    return this->model_.rowCount() == 0;
+}
+
 }  // namespace chatterino

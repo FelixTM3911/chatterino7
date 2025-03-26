@@ -32,6 +32,8 @@ public:
     void setInputAction(ActionCallback callback);
 
     bool eventFilter(QObject *watched, QEvent *event) override;
+    
+    [[nodiscard]] bool isEmpty() const;
 
 protected:
     void showEvent(QShowEvent *event) override;

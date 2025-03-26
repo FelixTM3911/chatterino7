@@ -770,15 +770,13 @@ void SplitInput::updateCompletionPopup()
     bool showEmoteCompletion = getSettings()->emoteCompletionWithColon;
     bool showUsernameCompletion =
         tc != nullptr && getSettings()->showUsernameCompletionMenu;
-    if (!showEmoteCompletion && !showUsernameCompletion)
+    if (!showUsernameCompletion && !showEmoteCompletion)
     {
         this->hideCompletionPopup();
         return;
     }
 
-    // check if in completion prefix
     auto &edit = *this->ui_.textEdit;
-
     auto text = edit.toPlainText();
     auto position = edit.textCursor().position() - 1;
 
@@ -788,41 +786,58 @@ void SplitInput::updateCompletionPopup()
         return;
     }
 
-    for (int i = std::clamp(position, 0, (int)text.length() - 1); i >= 0; i--)
+    // Find the start of the current word
+    int wordStart = position;
+    for (; wordStart >= 0; wordStart--)
     {
-        if (text[i] == ' ')
+        if (text[wordStart] == ' ')
         {
-            this->hideCompletionPopup();
-            return;
+            wordStart++;
+            break;
         }
 
-        if (text[i] == ':' && showEmoteCompletion)
+        // Check for emote/user prefix characters
+        if (showEmoteCompletion && text[wordStart] == ':')
         {
-            if (i == 0 || text[i - 1].isSpace())
+            if (wordStart == 0 || text[wordStart - 1].isSpace())
             {
-                this->showCompletionPopup(text.mid(i, position - i + 1),
-                                          CompletionKind::Emote);
+                this->showCompletionPopup(text.mid(wordStart, position - wordStart + 1),
+                                        CompletionKind::Emote);
+                return;
             }
             else
             {
                 this->hideCompletionPopup();
+                return;
             }
-            return;
         }
 
-        if (text[i] == '@' && showUsernameCompletion)
+        if (showUsernameCompletion && text[wordStart] == '@')
         {
-            if (i == 0 || text[i - 1].isSpace())
+            if (wordStart == 0 || text[wordStart - 1].isSpace())
             {
-                this->showCompletionPopup(text.mid(i, position - i + 1),
-                                          CompletionKind::User);
+                this->showCompletionPopup(text.mid(wordStart, position - wordStart + 1),
+                                        CompletionKind::User);
+                return;
             }
             else
             {
                 this->hideCompletionPopup();
+                return;
             }
-            return;
         }
+    }
+    if (wordStart < 0) wordStart = 0;
+
+    // Get the current word being typed
+    QString currentWord = text.mid(wordStart, position - wordStart + 1);
+
+    // Show emote completion for the current word if it's not empty
+    // and we're not in the middle of a mention
+    if (showEmoteCompletion && !currentWord.isEmpty() && !currentWord.startsWith('@'))
+    {
+        this->showCompletionPopup(currentWord, CompletionKind::Emote);
+        return;
     }
 
     this->hideCompletionPopup();
@@ -848,6 +863,13 @@ void SplitInput::showCompletionPopup(const QString &text, CompletionKind kind)
 
     popup->updateCompletion(text, kind, this->split_->getChannel());
 
+    // Hide popup if there are no matches
+    if (popup->isEmpty())
+    {
+        this->hideCompletionPopup();
+        return;
+    }
+
     auto pos = this->mapToGlobal(QPoint{0, 0}) - QPoint(0, popup->height()) +
                QPoint((this->width() - popup->width()) / 2, 0);
 
@@ -871,33 +893,51 @@ void SplitInput::insertCompletionText(const QString &input_) const
     auto text = edit.toPlainText();
     auto position = edit.textCursor().position() - 1;
 
-    for (int i = std::clamp(position, 0, (int)text.length() - 1); i >= 0; i--)
+    // Find the start and end of the current word
+    int wordStart = position;
+    int wordEnd = position + 1;
+
+    // Find word start
+    for (; wordStart >= 0; wordStart--)
     {
-        bool done = false;
-        if (text[i] == ':')
+        if (text[wordStart] == ' ' || text[wordStart] == '@')
         {
-            done = true;
-        }
-        else if (text[i] == '@')
-        {
-            const auto userMention =
-                formatUserMention(input_, edit.isFirstWord(),
-                                  getSettings()->mentionUsersWithComma);
-            input = "@" + userMention + " ";
-            done = true;
-        }
-
-        if (done)
-        {
-            auto cursor = edit.textCursor();
-            edit.setPlainText(
-                text.remove(i, position - i + 1).insert(i, input));
-
-            cursor.setPosition(i + input.size());
-            edit.setTextCursor(cursor);
+            wordStart++;
             break;
         }
     }
+    if (wordStart < 0) wordStart = 0;
+
+    // Find word end
+    for (; wordEnd < text.length(); wordEnd++)
+    {
+        if (text[wordEnd] == ' ')
+        {
+            break;
+        }
+    }
+
+    // Check if we're completing after a colon
+    if (wordStart > 0 && text[wordStart - 1] == ':')
+    {
+        wordStart--;  // Include the colon in the replacement
+    }
+    // Check if we're completing a mention
+    else if (wordStart > 0 && text[wordStart - 1] == '@')
+    {
+        wordStart--;  // Include the @ in the replacement
+        const auto userMention =
+            formatUserMention(input_, edit.isFirstWord(),
+                              getSettings()->mentionUsersWithComma);
+        input = "@" + userMention + " ";
+    }
+
+    auto cursor = edit.textCursor();
+    edit.setPlainText(
+        text.left(wordStart) + input + text.mid(wordEnd));
+
+    cursor.setPosition(wordStart + input.size());
+    edit.setTextCursor(cursor);
 }
 
 bool SplitInput::hasSelection() const

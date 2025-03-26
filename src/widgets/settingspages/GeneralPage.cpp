@@ -579,7 +579,7 @@ void GeneralPage::initLayout(GeneralPageView &layout)
         "Enable zero-width emotes", s.enableZeroWidthEmotes, false,
         "When disabled, emotes that overlap other emotes, such as BTTV's "
         "cvMask and 7TV's RainTime, will appear as normal emotes.");
-    layout.addCheckbox("Enable emote auto-completion by typing :",
+    layout.addCheckbox("ScheissTag - Enable emote auto-completion by typing :",
                        s.emoteCompletionWithColon);
     layout.addCheckbox("Use experimental smarter emote completion.",
                        s.useSmartEmoteCompletion);
