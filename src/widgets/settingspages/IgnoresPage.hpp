@@ -4,6 +4,8 @@
 
 #include <QStringListModel>
 
+#include "controllers/ignores/EmoteBlacklistModel.hpp"
+
 class QVBoxLayout;
 
 namespace chatterino {

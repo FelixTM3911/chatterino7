@@ -205,6 +205,8 @@ set(SOURCE_FILES
         controllers/ignores/IgnoreModel.hpp
         controllers/ignores/IgnorePhrase.cpp
         controllers/ignores/IgnorePhrase.hpp
+        controllers/ignores/EmoteBlacklistModel.cpp
+        controllers/ignores/EmoteBlacklistModel.hpp
 
         controllers/moderationactions/ModerationAction.cpp
         controllers/moderationactions/ModerationAction.hpp

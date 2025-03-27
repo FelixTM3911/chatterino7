@@ -27,6 +27,7 @@ using namespace literals;
 static void addPhrasesTab(LayoutCreator<QVBoxLayout> box);
 static void addUsersTab(IgnoresPage &page, LayoutCreator<QVBoxLayout> box,
                         QStringListModel &model);
+static void addEmotesTab(LayoutCreator<QVBoxLayout> box);
 
 IgnoresPage::IgnoresPage()
 {
@@ -37,6 +38,7 @@ IgnoresPage::IgnoresPage()
     addPhrasesTab(tabs.appendTab(new QVBoxLayout, "Messages"));
     addUsersTab(*this, tabs.appendTab(new QVBoxLayout, "Users"),
                 this->userListModel_);
+    addEmotesTab(tabs.appendTab(new QVBoxLayout, "Emotes"));
     this->onShow();
 }
 
@@ -114,6 +116,36 @@ void addUsersTab(IgnoresPage &page, LayoutCreator<QVBoxLayout> users,
 
     users.emplace<QLabel>("List of blocked users:");
     users.emplace<QListView>()->setModel(&userModel);
+}
+
+void addEmotesTab(LayoutCreator<QVBoxLayout> layout)
+{
+    layout.emplace<QLabel>("Blacklist emotes from being suggested in the emote autocomplete.");
+    EditableModelView *view =
+        layout
+            .emplace<EditableModelView>(
+                (new EmoteBlacklistModel(nullptr))
+                    ->initialized(&getSettings()->blacklistedEmotes))
+            .getElement();
+    view->setTitles({"Emote"});
+    view->getTableView()->horizontalHeader()->setSectionResizeMode(
+        QHeaderView::Fixed);
+    view->getTableView()->horizontalHeader()->setSectionResizeMode(
+        0, QHeaderView::Stretch);
+
+    // We can safely ignore this signal connection since we own the view
+    std::ignore = view->addButtonPressed.connect([] {
+        auto currentEmotes = getSettings()->blacklistedEmotes.getValue();
+        currentEmotes.push_back(QString(""));
+        getSettings()->blacklistedEmotes = currentEmotes;
+        getSettings()->getBlacklistedEmotesVector().append(QString(""));
+    });
+
+    // Add column resize
+    QTimer::singleShot(1, [view] {
+        view->getTableView()->resizeColumnsToContents();
+        view->getTableView()->setColumnWidth(0, 200);
+    });
 }
 
 void IgnoresPage::onShow()

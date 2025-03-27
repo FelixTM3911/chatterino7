@@ -12,6 +12,7 @@
 #include "debug/Benchmark.hpp"
 #include "pajlada/settings/signalargs.hpp"
 #include "util/WindowsHelper.hpp"
+#include "common/SignalVector.hpp"
 
 #include <pajlada/signals/scoped-connection.hpp>
 
@@ -180,6 +181,7 @@ Settings::Settings(const Args &args, const QString &settingsDirectory)
                            this->moderationActions);
     initializeSignalVector(this->signalHolder, this->loggedChannelsSetting,
                            this->loggedChannels);
+    initializeSignalVector(this->signalHolder, this->blacklistedEmotes, this->blacklistedEmotesVector_);
 
     instance_ = this;
 

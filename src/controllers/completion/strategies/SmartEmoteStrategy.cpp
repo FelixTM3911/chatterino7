@@ -187,9 +187,18 @@ void SmartTabEmoteStrategy::apply(const std::vector<EmoteItem> &items,
         normalizedQuery = normalizedQuery.mid(1);
     }
 
+    // Get blacklisted emotes
+    const auto &blacklistedEmotes = getSettings()->blacklistedEmotes.getValue();
+
     completeEmotes(
         items, output, normalizedQuery, false,
         [&](const EmoteItem &item, Qt::CaseSensitivity caseHandling) -> bool {
+            // Skip blacklisted emotes
+            if (std::find(blacklistedEmotes.begin(), blacklistedEmotes.end(), 
+                         item.displayName) != blacklistedEmotes.end()) {
+                return false;
+            }
+
             QStringView itemQuery;
             if (item.isEmoji)
             {

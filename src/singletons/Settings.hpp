@@ -728,6 +728,9 @@ private:
     ChatterinoSetting<std::vector<ChannelLog>> loggedChannelsSetting = {
         "/logging/channels"};
     SignalVector<QString> mutedChannels;
+    ChatterinoSetting<std::vector<QString>> blacklistedEmotesSetting = {
+        "/ignore/emotes", {}};
+    SignalVector<QString> blacklistedEmotesVector_;
 
 public:
     SignalVector<HighlightPhrase> highlightedMessages;
@@ -739,6 +742,12 @@ public:
     SignalVector<Nickname> nicknames;
     SignalVector<ModerationAction> moderationActions;
     SignalVector<ChannelLog> loggedChannels;
+    ChatterinoSetting<std::vector<QString>> blacklistedEmotes = {
+        "/ignore/emotes", {}};
+    
+    SignalVector<QString> &getBlacklistedEmotesVector() {
+        return blacklistedEmotesVector_;
+    }
 
     bool isHighlightedUser(const QString &username);
     bool isBlacklistedUser(const QString &username);
