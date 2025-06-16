@@ -6,6 +6,7 @@
 #include "util/LayoutCreator.hpp"
 #include "util/RemoveScrollAreaBackground.hpp"
 #include "widgets/BasePopup.hpp"
+#include "widgets/buttons/SignalLabel.hpp"
 #include "widgets/layout/FlowLayout.hpp"
 
 #include <QFile>
@@ -136,6 +137,8 @@ AboutPage::AboutPage()
             addLicense(form.getElement(), "Howard Hinnant's date.h",
                        "https://github.com/HowardHinnant/date",
                        ":/licenses/howard-hinnant-date.txt");
+            addLicense(form.getElement(), "{fmt}", "https://fmt.dev",
+                       ":/licenses/fmtlib.txt");
         }
 
         // Attributions
