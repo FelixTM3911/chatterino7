@@ -562,18 +562,28 @@ void GeneralPage::initLayout(GeneralPageView &layout)
     SettingWidget::colorButton("Line color", s.lastMessageColor)->addTo(layout);
 
     layout.addTitle("Emotes");
-    layout.addCheckbox("Enable", s.enableEmoteImages);
-    layout.addCheckbox("Animate", s.animateEmotes);
-    layout.addCheckbox("Animate only when Chatterino is focused",
-                       s.animationsWhenFocused);
-    layout.addCheckbox(
-        "Enable zero-width emotes", s.enableZeroWidthEmotes, false,
-        "When disabled, emotes that overlap other emotes, such as BTTV's "
-        "cvMask and 7TV's RainTime, will appear as normal emotes.");
-    layout.addCheckbox("ScheissTag - Enable emote auto-completion by typing :",
-                       s.emoteCompletionWithColon);
-    layout.addCheckbox("Use experimental smarter emote completion.",
-                       s.useSmartEmoteCompletion);
+    SettingWidget::checkbox("Enable", s.enableEmoteImages)->addTo(layout);
+
+    SettingWidget::checkbox("Animate", s.animateEmotes)->addTo(layout);
+
+    SettingWidget::checkbox("Animate only when Chatterino is focused",
+                            s.animationsWhenFocused)
+        ->addTo(layout);
+
+    SettingWidget::checkbox("Enable zero-width emotes", s.enableZeroWidthEmotes)
+        ->setTooltip(
+            "When disabled, emotes that overlap other emotes, such as BTTV's "
+            "cvMask and 7TV's RainTime, will appear as normal emotes.")
+        ->addTo(layout);
+
+    SettingWidget::checkbox("Enable emote auto-completion by typing :",
+                            s.emoteCompletionWithColon)
+        ->addTo(layout);
+
+    SettingWidget::checkbox("Use experimental smarter emote completion.",
+                            s.useSmartEmoteCompletion)
+        ->addTo(layout);
+
     layout.addDropdown<float>(
         "Size", {"0.5x", "0.75x", "Default", "1.25x", "1.5x", "2x"},
         s.emoteScale,
