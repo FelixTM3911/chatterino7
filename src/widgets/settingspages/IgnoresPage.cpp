@@ -124,7 +124,8 @@ void addUsersTab(IgnoresPage &page, LayoutCreator<QVBoxLayout> users,
 
 void addEmotesTab(LayoutCreator<QVBoxLayout> layout)
 {
-    layout.emplace<QLabel>("Blacklist emotes from being suggested in the emote autocomplete.");
+    layout.emplace<QLabel>(
+        "Blacklist emotes from being suggested in the emote autocomplete.");
     EditableModelView *view =
         layout
             .emplace<EditableModelView>(

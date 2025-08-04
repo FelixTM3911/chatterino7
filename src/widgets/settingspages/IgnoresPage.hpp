@@ -1,10 +1,10 @@
 #pragma once
 
+#include "controllers/ignores/EmoteBlacklistModel.hpp"
 #include "widgets/settingspages/SettingsPage.hpp"
 
 #include <QStringListModel>
 
-#include "controllers/ignores/EmoteBlacklistModel.hpp"
 
 class QVBoxLayout;
 

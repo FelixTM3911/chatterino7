@@ -12,8 +12,9 @@
 #include "providers/twitch/TwitchChannel.hpp"
 #include "providers/twitch/TwitchIrcServer.hpp"
 #include "singletons/Emotes.hpp"
-#include "widgets/splits/InputCompletionItem.hpp"
 #include "singletons/Settings.hpp"
+#include "widgets/splits/InputCompletionItem.hpp"
+
 
 namespace chatterino::completion {
 
@@ -64,16 +65,18 @@ EmoteSource::EmoteSource(const Channel *channel,
 void EmoteSource::update(const QString &query)
 {
     this->output_.clear();
-    
+
     // Filter out blacklisted emotes from items_ before applying strategy
     std::vector<EmoteItem> filteredItems;
     const auto &blacklistedEmotes = getSettings()->blacklistedEmotes.getValue();
-    
+
     for (const auto &item : this->items_)
     {
         // Skip if emote is blacklisted
-        if (std::find(blacklistedEmotes.begin(), blacklistedEmotes.end(), 
-                      item.displayName.toStdString()) != blacklistedEmotes.end()) {
+        if (std::find(blacklistedEmotes.begin(), blacklistedEmotes.end(),
+                      item.displayName.toStdString()) !=
+            blacklistedEmotes.end())
+        {
             continue;
         }
         filteredItems.push_back(item);

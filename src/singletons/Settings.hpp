@@ -788,8 +788,9 @@ public:
     SignalVector<ChannelLog> loggedChannels;
     ChatterinoSetting<std::vector<QString>> blacklistedEmotes = {
         "/ignore/emotes", {}};
-    
-    SignalVector<QString> &getBlacklistedEmotesVector() {
+
+    SignalVector<QString> &getBlacklistedEmotesVector()
+    {
         return blacklistedEmotesVector_;
     }
 

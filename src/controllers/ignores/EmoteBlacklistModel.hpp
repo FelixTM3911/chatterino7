@@ -1,9 +1,11 @@
 #pragma once
 
-#include "common/SignalVectorModel.hpp"
 #include "common/ChatterinoSetting.hpp"
 #include "common/SignalVector.hpp"
+#include "common/SignalVectorModel.hpp"
+
 #include <QString>
+
 
 namespace chatterino {
 
@@ -14,16 +16,17 @@ public:
     virtual ~EmoteBlacklistModel() = default;
 
     // Add initialized method
-    EmoteBlacklistModel *initialized(ChatterinoSetting<std::vector<QString>> *setting);
+    EmoteBlacklistModel *initialized(
+        ChatterinoSetting<std::vector<QString>> *setting);
 
 protected:
     // turn a vector item into a model row
     QString getItemFromRow(std::vector<QStandardItem *> &row,
-                          const QString &original) override;
+                           const QString &original) override;
 
     // turns a row in the model into a vector item
     void getRowFromItem(const QString &item,
-                       std::vector<QStandardItem *> &row) override;
+                        std::vector<QStandardItem *> &row) override;
 
 private:
     ChatterinoSetting<std::vector<QString>> *setting_{nullptr};
@@ -31,7 +34,3 @@ private:
 };
 
 }  // namespace chatterino
-
-
-
-
