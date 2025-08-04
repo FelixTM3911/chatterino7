@@ -5,7 +5,6 @@
 
 #include <QStringListModel>
 
-
 class QVBoxLayout;
 
 namespace chatterino {

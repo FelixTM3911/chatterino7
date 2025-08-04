@@ -16,7 +16,6 @@
 
 #include <pajlada/signals/scoped-connection.hpp>
 
-
 namespace {
 
 using namespace chatterino;

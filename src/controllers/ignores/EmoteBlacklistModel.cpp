@@ -6,7 +6,6 @@
 
 #include <QStandardItem>
 
-
 namespace chatterino {
 
 EmoteBlacklistModel::EmoteBlacklistModel(QObject *parent)

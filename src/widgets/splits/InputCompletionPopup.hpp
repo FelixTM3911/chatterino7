@@ -32,7 +32,7 @@ public:
     void setInputAction(ActionCallback callback);
 
     bool eventFilter(QObject *watched, QEvent *event) override;
-   
+
 protected:
     void showEvent(QShowEvent *event) override;
     void hideEvent(QHideEvent *event) override;

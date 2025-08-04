@@ -6,7 +6,6 @@
 
 #include <QString>
 
-
 namespace chatterino {
 
 class EmoteBlacklistModel : public SignalVectorModel<QString>

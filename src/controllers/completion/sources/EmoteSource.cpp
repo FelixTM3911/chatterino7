@@ -15,7 +15,6 @@
 #include "singletons/Settings.hpp"
 #include "widgets/splits/InputCompletionItem.hpp"
 
-
 namespace chatterino::completion {
 
 namespace {
